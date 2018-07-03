@@ -18,7 +18,7 @@ image: "img/beer.jpg"
 <p>R has really come on leaps and bounds since I tried it as a grad student about 10 years ago and swore never again. I’m still getting used to the tidyverse way of doing things after a decade of Stata, but I’m impressed with how much you can do with so little code, and how easy plotting things is with <code>ggplot2</code>.</p>
 <div id="brewing-up-a-storm" class="section level3">
 <h3>Brewing up a storm</h3>
-<p>I like to try things out on new data as I learn, so where better to flex my tidyverse muscles than on some data on homebrewing, a subject close to my heart. I like to brew all kinds of things, from the pale and hoppy to the strong, dark and interesting. But what is everyone else brewing? The kaggle <a href="https://www.kaggle.com/jtrofe/beer-recipes/data">Brewer’s Friend</a> dataset has the answers. It contains details of over 70,000 homebrew recipes shared by people who use the site. I use Brewer’s Friend myself - I don’t actually share my recipes so none of mine are in this dataset, but their <a href="https://www.brewersfriend.com/homebrew/recipe/calculator">recipe calculator</a> is a useful tool. Plus the name always reminds me of <em>The Inbetweeners</em>.</p>
+<p>I like to try things out on new data as I learn, so where better to flex my tidyverse muscles than on some data on homebrewing, a subject close to my heart. I like to brew all kinds of things, from the pale and hoppy to the strong, dark and interesting. But what is everyone else brewing? The <a href="https://www.kaggle.com/jtrofe/beer-recipes/data">Brewer’s Friend</a> dataset <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> has the answers. It contains details of over 70,000 homebrew recipes shared by people who use the site. I use Brewer’s Friend myself - I don’t actually share my recipes so none of mine are in this dataset, but their <a href="https://www.brewersfriend.com/homebrew/recipe/calculator">recipe calculator</a> is a useful tool. Plus the name always reminds me of <em>The Inbetweeners</em>.</p>
 <div class="figure">
 <img src="/post/2018-06-29-how-are-you-brewing_files/friend.jpg" width="350" />
 
@@ -32,7 +32,7 @@ image: "img/beer.jpg"
 library(dplyr)
 library(knitr)
 library(kableExtra)</code></pre>
-<p>The dataset comes from kaggle in CSV format, so let’s import it and see what we’ve got.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<p>The dataset comes from kaggle in CSV format, so let’s import it and see what we’ve got.<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
 <pre class="r"><code>beer &lt;- read_csv(beerfile, col_types = cols(), locale = locale(encoding = &quot;UTF-8&quot;))
 names(beer)</code></pre>
 <pre><code>##  [1] &quot;BeerID&quot;        &quot;Name&quot;          &quot;URL&quot;           &quot;Style&quot;        
@@ -171,6 +171,7 @@ beer2 %&gt;%
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>I have to confess to cheating ever so slightly here. A few of the beer style names had foreign characters (umlauts etc.) in them, so I edited these names in the CSV because I still haven’t figured out encoding in R!<a href="#fnref1">↩</a></p></li>
+<li id="fn1"><p>The dataset is published on Kaggle and released under a CC0: Public Domain licence.<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>I have to confess to cheating ever so slightly here. A few of the beer style names had foreign characters (umlauts etc.) in them, so I edited these names in the CSV because I still haven’t figured out encoding in R!<a href="#fnref2">↩</a></p></li>
 </ol>
 </div>

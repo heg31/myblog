@@ -17,7 +17,7 @@ R has really come on leaps and bounds since I tried it as a grad student about 1
 
 ### Brewing up a storm
 
-I like to try things out on new data as I learn, so where better to flex my tidyverse muscles than on some data on homebrewing, a subject close to my heart. I like to brew all kinds of things, from the pale and hoppy to the strong, dark and interesting. But what is everyone else brewing? The kaggle [Brewer's Friend](https://www.kaggle.com/jtrofe/beer-recipes/data) dataset has the answers. It contains details of over 70,000 homebrew recipes shared by people who use the site. I use Brewer's Friend myself - I don't actually share my recipes so none of mine are in this dataset, but their [recipe calculator](https://www.brewersfriend.com/homebrew/recipe/calculator) is a useful tool. Plus the name always reminds me of *The Inbetweeners*.
+I like to try things out on new data as I learn, so where better to flex my tidyverse muscles than on some data on homebrewing, a subject close to my heart. I like to brew all kinds of things, from the pale and hoppy to the strong, dark and interesting. But what is everyone else brewing? The [Brewer's Friend](https://www.kaggle.com/jtrofe/beer-recipes/data) dataset [^1] has the answers. It contains details of over 70,000 homebrew recipes shared by people who use the site. I use Brewer's Friend myself - I don't actually share my recipes so none of mine are in this dataset, but their [recipe calculator](https://www.brewersfriend.com/homebrew/recipe/calculator) is a useful tool. Plus the name always reminds me of *The Inbetweeners*.
 
 ![](/post/2018-06-29-how-are-you-brewing_files/friend.jpg){width=350px}
 
@@ -35,7 +35,7 @@ library(kableExtra)
 ```
 
 
-The dataset comes from kaggle in CSV format, so let's import it and see what we've got.[^1]
+The dataset comes from kaggle in CSV format, so let's import it and see what we've got.[^2]
 
 ```{r echo = FALSE}
 beerfile <- file.path("~", "Rstuff", "miniproj","recipeData.csv")
@@ -146,5 +146,7 @@ The length of the bars here represents IBU but they are arranged by popularity o
 
 I wonder if you can segment brewers into types. The easy going pale ale fans vs. the nerds making ridiculous imperial stouts. CAMRA vs. craft. Beardy guys wearing sandals vs. beardy guys wearing Converse. This is something that I hope to look at in a follow up post, by linking the beer data to the user data, although any inferences to footwear and facial hair will be purely speculative.
 
-[^1]: I have to confess to cheating ever so slightly here. A few of the beer style names had foreign characters (umlauts etc.) in them, so I edited these names in the CSV because I still haven't figured out encoding in R!
+[^1]: The dataset is published on Kaggle and released under a CC0: Public Domain licence.
+
+[^2]: I have to confess to cheating ever so slightly here. A few of the beer style names had foreign characters (umlauts etc.) in them, so I edited these names in the CSV because I still haven't figured out encoding in R!
 

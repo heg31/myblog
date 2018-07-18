@@ -6,6 +6,8 @@ languageCode = "en-us"
 disqusShortname = ""
 # Enable Google Analytics by entering your tracking code
 googleAnalytics = ""
+# Enable emojis
+enableEmoji = true
 
 [params]
   # Style options: default (pink), blue, green, pink, red, sea, violet

@@ -22,7 +22,7 @@ It’s also a thing of interest to a musical data geek. These songs represent th
 
 ### Scrape the data
 
-I’m posting the code I wrote to scrape and manipulate the data as long as you promise not to laugh at my dodgy function writing skills. But as it takes a good hour to get all the lyrics, I saved the data to a spreadsheet, which is available on the [github repo](https://github.com/heg31/myblog) for the website, and it is imported from there for the purposes of the analysis below.
+Gosh webscraping is very moreish when you get into it. This is how I got hold of all the lyrics on (almost) every song on all 100 albums, sort of quickly.[^1]
 
 The *Now!* series has a website with a page giving track listings for every album, and the URLs follow a fairly regular pattern, the only slight inconvenience being the different format of the URL for numbers 1 and 97-100. From there it’s full steam ahead for extracting the info with `rvest` and coercing it into the shape I want in a `dplyr` pipeline.
 
@@ -177,7 +177,7 @@ lyricsdata %>%
   guides(fill = FALSE)
 ```
 
-Yay, it’s love! Every decade! Although it’s more dominant in the 80s than the 2000s. Baby and yeah are perennial favourites. Na (na na) has persisted, with la (la la) appearing from the 90s. There are a lot of similarities across the decades, with not many new themes appearing in the world of pop lyrics, and indeed few surprises – you could practically have guessed these.
+Yay, it’s love! Every decade! Although it’s more dominant in the 80s than the 2000s. Baby and yeah are perennial features, and for those times you've just run out of things to sing about, na (na na) is an enduring favourite, with la (la la) appearing from the 90s. There are a lot of similarities across the decades, with not many new themes appearing in the world of pop lyrics, and indeed few surprises – you could practically have guessed these.
 
 Let’s do a more fine grained picture of how some of these have changed over time. 
 
@@ -198,7 +198,7 @@ lyricsdata %>%
 ```
 
 
-Each dot represents a *Now!* album, with a smoothed line drawn through them. It seems that love fell off in popularity for a while, but is now back on the way up. Yeah has also seen a small but steady increase, although baby may have peaked in the mid-90s. There's not much striking here in the way of trends though. If we want to know what distinguishes the songs over time, a comparison cloud is the way forward, which shows the words that are more prevalent in each decade compared with the others.
+Each dot represents a *Now!* album, with a smoothed line drawn through them. It seems that love fell off in popularity for a while, but is now back on the way up. Yeah has also seen a small but steady increase, although baby may have peaked in the mid-90s. There's not much that's striking here in the way of trends though. If we want to know what distinguishes the songs over time, a comparison cloud is the way forward, which shows the words that are more prevalent in each decade compared with the others.
 
 ```{r warning=FALSE, message=FALSE}
 library(wordcloud)
@@ -216,10 +216,10 @@ lyricsdata %>%
   comparison.cloud(max.words = 100, scale = c(3,0.5))
 ```
 
-The distinguishing features of each decade seem to be:
+Some distinguishing features of each decade seem to be:
 
 * The 1980s: political words - war, free, money (well it was the Thatcher era)
-* The 1990s: nonsense words - de, ba, da [^1] 
+* The 1990s: nonsense words - de, ba, da [^2] 
 * The 2000: move-y, dance-y words - dance, move, rock
 * The 2010s: ayy, obscenity!
 
@@ -281,6 +281,8 @@ lyricsdata %>%
 ```
 
 
-It might be interesting to bring in other information about the songs, like their chart position. Although everything on a Now! album is a ‘hit’, not everything will have reached the top of the charts, and there’s often some filler, which ideally you might want to filter out of the analysis. Equally, presence on a Now! album is not the only indicator of a song’s popularity – an alternative corpus could be top 10 songs over the same period. The guy who picks the songs for the Now! albums in the US says he uses a mixture of metrics and gut instinct, but I wonder if there are features that distinguish the songs that make it on.
+It might be interesting to bring in other information about the songs, like their chart position. Although everything on a *Now!* album is a ‘hit’, not everything will have reached the top of the charts, and there’s often some filler, which ideally you might want to filter out of the analysis. Equally, presence on a *Now!* album is not the only indicator of a song’s popularity – an alternative corpus could take top 10 songs over the same period. The guy who picks the songs for the *Now!* albums in the US says he uses a mixture of metrics and gut instinct, but I wonder if there are features that distinguish the songs that make it on.
 
-[^1]: When I initially got this result, my first thought was that this could be entirely down to [*Blue* by Eiffel 65](https://www.youtube.com/watch?v=zA52uNzx7Y4). But no! Even if you remove it from the analysis, as I have above, the nonsense words still out as more popular in this decade. So the Eiffel lads were obviously tapping into the zeitgeist. 
+[^1]: I’m posting the code I wrote to scrape and manipulate the data as long as you promise not to laugh at my dodgy function writing skills. But as it takes a good hour to get all the lyrics, I don't recommend running it! I've saved the data to a spreadsheet, which is available on the [github repo](https://github.com/heg31/myblog) for the website.
+
+[^2]: When I initially got this result, my first thought was that this could be entirely down to [*Blue* by Eiffel 65](https://www.youtube.com/watch?v=zA52uNzx7Y4). But no! Even if you remove it from the analysis, as I have above, the nonsense words still out as more popular in this decade. So the Eiffel lads were obviously tapping into the zeitgeist. 

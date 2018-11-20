@@ -35,15 +35,15 @@ library(kableExtra)
 ```
 
 
-The dataset comes from kaggle in CSV format, so let's import it and see what we've got.[^2]
+The dataset comes from kaggle in CSV format, so let's import it and see what we've got.
 
 ```{r echo = FALSE}
-beerfile <- file.path("~", "Rstuff", "miniproj","recipeData.csv")
+beerfile <- "recipeData.csv"
 ```
 
 
 ```{r}
-beer <- read_csv(beerfile, col_types = cols(), locale = locale(encoding = "UTF-8"))
+beer <- read.csv(beerfile)
 names(beer)
 ```
 
@@ -51,7 +51,7 @@ There are more variables than I want. I am restricting this analysis to a handfu
 
 ```{r}
 beer2 <- beer %>%
-  mutate(BatchSize = `Size(L)`) %>%
+  mutate(BatchSize = `Size.L.`) %>%
   select(Style, BatchSize, ABV, IBU, Color, BrewMethod) %>%
   mutate_at(c("Style", "BrewMethod"), funs(factor(.))) %>%
   mutate(ColorCat = cut(Color, breaks = c(0,7.5,14,25,186), 
@@ -147,6 +147,4 @@ The length of the bars here represents IBU but they are arranged by popularity o
 I wonder if you can segment brewers into types. The easy going pale ale fans vs. the nerds making ridiculous imperial stouts. CAMRA vs. craft. Beardy guys wearing sandals vs. beardy guys wearing Converse. This is something that I hope to look at in a follow up post, by linking the beer data to the user data, although any inferences to footwear and facial hair will be purely speculative.
 
 [^1]: The dataset is published on Kaggle and released under a CC0: Public Domain licence.
-
-[^2]: I have to confess to cheating ever so slightly here. A few of the beer style names had foreign characters (umlauts etc.) in them, so I edited these names in the CSV because I still haven't figured out encoding in R!
 

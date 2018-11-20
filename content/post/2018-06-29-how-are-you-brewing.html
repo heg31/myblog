@@ -32,18 +32,18 @@ image: "img/beer.jpg"
 library(dplyr)
 library(knitr)
 library(kableExtra)</code></pre>
-<p>The dataset comes from kaggle in CSV format, so let’s import it and see what we’ve got.<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
-<pre class="r"><code>beer &lt;- read_csv(beerfile, col_types = cols(), locale = locale(encoding = &quot;UTF-8&quot;))
+<p>The dataset comes from kaggle in CSV format, so let’s import it and see what we’ve got.</p>
+<pre class="r"><code>beer &lt;- read.csv(beerfile)
 names(beer)</code></pre>
 <pre><code>##  [1] &quot;BeerID&quot;        &quot;Name&quot;          &quot;URL&quot;           &quot;Style&quot;        
-##  [5] &quot;StyleID&quot;       &quot;Size(L)&quot;       &quot;OG&quot;            &quot;FG&quot;           
+##  [5] &quot;StyleID&quot;       &quot;Size.L.&quot;       &quot;OG&quot;            &quot;FG&quot;           
 ##  [9] &quot;ABV&quot;           &quot;IBU&quot;           &quot;Color&quot;         &quot;BoilSize&quot;     
 ## [13] &quot;BoilTime&quot;      &quot;BoilGravity&quot;   &quot;Efficiency&quot;    &quot;MashThickness&quot;
 ## [17] &quot;SugarScale&quot;    &quot;BrewMethod&quot;    &quot;PitchRate&quot;     &quot;PrimaryTemp&quot;  
 ## [21] &quot;PrimingMethod&quot; &quot;PrimingAmount&quot; &quot;UserId&quot;</code></pre>
 <p>There are more variables than I want. I am restricting this analysis to a handful: style, batch size, ABV (boozy-ness), IBU (bitterness), colour and brewing method. I also want to turn the colour, currently on a continuous scale, into a factor variable with four categories based on typical cutoff points. Luckily the data is already ‘tidy’, so there’s just a little janitorial work to be done, filtering out cases with odd values on the numeric variables (unfeasibly large batch sizes, ABV, etc.).</p>
 <pre class="r"><code>beer2 &lt;- beer %&gt;%
-  mutate(BatchSize = `Size(L)`) %&gt;%
+  mutate(BatchSize = `Size.L.`) %&gt;%
   select(Style, BatchSize, ABV, IBU, Color, BrewMethod) %&gt;%
   mutate_at(c(&quot;Style&quot;, &quot;BrewMethod&quot;), funs(factor(.))) %&gt;%
   mutate(ColorCat = cut(Color, breaks = c(0,7.5,14,25,186), 
@@ -73,9 +73,7 @@ summary(beerfactor)</code></pre>
 ##  (Other)             :43405</code></pre>
 <p>The recipes are mostly all grain, and the pale styles dominate. There’s a lot of styles in that ‘other’ category, and indeed there are a lot of different styles in the dataset…</p>
 <pre class="r"><code>beer2 %&gt;% summarise(nstyle = n_distinct(Style))</code></pre>
-<pre><code>## # A tibble: 1 x 1
-##   nstyle
-##    &lt;int&gt;
+<pre><code>##   nstyle
 ## 1    175</code></pre>
 <p>…175 to be exact. Too many to make a sensible plot or table, so we’re probably only interested in the top n, say the top 20.</p>
 <pre class="r"><code>beer2 %&gt;% count(Style) %&gt;% top_n(20) %&gt;% ggplot(aes(x = fct_reorder(Style,n), y = n)) + geom_col() + coord_flip() + xlab(&quot;Style&quot;) + ylab(&quot;Number in dataset&quot;)</code></pre>
@@ -172,6 +170,5 @@ beer2 %&gt;%
 <hr />
 <ol>
 <li id="fn1"><p>The dataset is published on Kaggle and released under a CC0: Public Domain licence.<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>I have to confess to cheating ever so slightly here. A few of the beer style names had foreign characters (umlauts etc.) in them, so I edited these names in the CSV because I still haven’t figured out encoding in R!<a href="#fnref2">↩</a></p></li>
 </ol>
 </div>

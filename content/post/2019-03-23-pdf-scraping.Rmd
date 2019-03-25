@@ -1,0 +1,189 @@
+---
+title: Rescuing data from a pdf
+author: Helen Graham
+date: '2019-03-23'
+slug: pdf-scraping
+categories:
+  - R
+tags:
+  - tidyverse
+  - pdftools
+image: "img/jail-kittens.jpg"
+---
+
+I've had the unfortunate task recently of having to liberate some 
+data from pdfs; all part of the 'Sexiest Job In The World'(TM). 
+Fortunately after some blundering about 
+I've managed to get a decent result, and I thought I'd write up the process because it's no 
+doubt something I'm going to have to do again, and in case anyone else finds it useful.
+
+The `pdftools` package has been around for a while, allowing you to extract data line by 
+line from a pdf. However, a relatively new feature (launched late last year) is the 
+`pdf_data()` function, which 
+tells you the position on the page of every word you extract. This is particularly useful if 
+you are trying to extract a table and can't rely on inferring delimiters from whitespace.
+
+The example I'm using here is not the pdf I was scraping for work, because that one is 
+extremely long and boring (unless you are *fascinated* by which types of colouring you 
+are allowed to feed to ornamental fish, or which gut flora stabilisers are permitted for 
+weaned piglets). Instead, I've picked a simpler table as an
+illustrative example, from the very interesting world of the 
+['Minimum Income Standard'](https://www.jrf.org.uk/report/minimum-income-standard-britain-what-people-think).
+This is a consensus based measure of how much money is required to live to an acceptable 
+minimum standard in the UK today. Some of the headline tables are in a more easily 
+scrapable html page, but the detail is buried in a pdf. And maybe you want that for some 
+reason? For example, Table 3 in the report gives the amounts that different family types 
+are judged to need for spending on different things.
+
+![](/post/2019-03-23-pdf-scraping_files/mistable.jpg)
+
+
+<br>
+This table is on page 33 of the pdf, so I start by grabbing everything on that page. The 
+`pdf_data()` function produces a list with one item per page, so I select the 33rd.
+
+```{r warning = FALSE,message=FALSE}
+library(tidyverse)
+library(pdftools)
+library(knitr)
+library(kableExtra)
+
+pdfdata <- pdf_data("https://www.jrf.org.uk/file/37389/download?token=XeWAW_2J&filetype=full-report") %>% 
+  .[[33]]
+head(pdfdata)
+```
+
+It grabs every word, one per line of the table, along with its width, height and position 
+on the page. But how do you make sense of that?? How do you turn this into a table?
+The [blog post](https://ropensci.org/technotes/2018/12/14/pdftools-20/) 
+that launched the new feature helpfully says:
+"Converting this pdf data into the original data frame is left as an exercise for the 
+reader :)" with the smiley face and everything, trololol. 
+So I had to work out a way, which I did, and as ever I'm not convinced it's the cleverest,
+easiest or quickest way...but it's a way!
+
+To illustrate what the numbers mean in practice, here is how the title of the 
+table is represented:
+
+```{r }
+pdfdata[106:115,]
+```
+
+All the words have a y co-ordinate of 226, and you can also see how these words 
+are spread along the x axis from 72 to 340. 
+
+I'm not really interested in the title, the first thing I want is the header, which is
+on two rows, and I can find out which by searching for the relevant text:
+
+```{r }
+pdfdata %>% 
+  filter(grepl("Single|Pensioner|Couple|Lone",text))
+
+pdfdata %>% 
+  filter(grepl("Commodity|working|couple|children",text))
+```
+
+The header is on rows 244 and 256. Where is the bottom of the table?
+I don't want the totals rows, so I only want to go as far as the row with "Rent".
+
+```{r }
+pdfdata %>% 
+  filter(text == "Rent")
+```
+
+This is y = 531. Where are the rows between this?
+
+```{r }
+pdfdata %>% 
+  filter(y > 256 & y < 531) %>% 
+  select(y) %>% 
+  unique()
+```
+
+17 rows - yup you can see from the table that's right. 
+So we know where the rows start and end. What about the columns?
+Look for the leftmost word in each:
+
+```{r }
+pdfdata %>% 
+  filter(grepl("Commodity|working|Pensioner|\\+|Lone", text)) %>% 
+  arrange(x)
+```
+
+Now we have the numbers the table can be visualised thus (dodgy paint drawings are 
+not an essential part of this process):
+
+![](/post/2019-03-23-pdf-scraping_files/tablelocations.png)
+
+<br>
+From here it's a relatively straightforward merging exercise. I 
+start by restricting the data I'm working with to within the dimensions of interest, from 
+the header to the rent expenditure row.
+
+```{r }
+tabledata <- pdfdata %>% 
+  filter(x >= 72) %>% 
+  filter(y >= 244 & y <= 531) %>% 
+  arrange(x,y)
+```
+
+Mercifully, all the text in each row is on the same y dimension (different sized fonts in different 
+columns meant that this was not the case in the data I was
+dealing with at work!). So each row is represented by a single y value.
+But I will need to cut the x values into columns, using the values identified above as
+cut points (minus 1 to catch everything). Then it's just a case of collapsing together 
+the data within each cell - i.e. each row/column combination - and then a `spread()`.
+Finally the top two rows need to be collapsed together into a single row.
+
+```{r }
+mistable <- tabledata %>% 
+  mutate(col = cut(x, breaks = c(71, 230, 310, 382, 456, Inf), 
+                   labels = as.character(c(1:5)))) %>% 
+  arrange(col, y) %>% 
+  group_by(col, y) %>% 
+  mutate(text = paste(text, collapse = " ")) %>% 
+  ungroup() %>%
+  select(y, text, col) %>% 
+  unique() %>% 
+  spread(col, text) %>% 
+  mutate(row = c(1,1:19)) %>% 
+  replace(., is.na(.), "") %>% 
+  group_by(row) %>% 
+  summarise_all(paste, collapse = " ") %>%
+  mutate_all(., trimws) %>% 
+  select(-row, -y)
+```
+
+Nearly there! now just need to make the top row the column names, and
+get rid of the penultimate row.
+
+```{r }
+colnames(mistable) <- mistable[1,]
+
+mistable <- mistable %>% 
+  slice(-1) %>% 
+  slice(-(nrow(.)-1))
+
+kable(mistable, align = "lcccc",
+      caption = "Components of the Minimum Income Standard for four family types") %>% 
+  kable_styling() %>% 
+  footnote(general = "Source: https://www.jrf.org.uk/report/minimum-income-standard-britain-what-people-think")
+```
+
+That's the table! You can admire it, or use the data to make a picture 
+(after coercing it into a tidy format first). 
+
+```{r }
+mistable %>% 
+  filter(Commodity != "Tobacco" & Commodity != "Motoring") %>% 
+  gather(famtype, amount, -Commodity) %>% 
+  mutate(amount = as.numeric(amount)) %>% 
+  ggplot(aes(famtype, amount, fill = Commodity)) + 
+  geom_bar(stat = "identity", position = "stack", colour = "black", size = 0.5) +
+  coord_flip() +
+  ylab("Family type")
+```
+
+You can see the relative size of the total budget and its components for the different family 
+types (sort of, yeah yeah it's not the best viz in the world, I've run out of steam after 
+all that pdf wrangling.) Look at the size of the childcare component (shown here in orange)!

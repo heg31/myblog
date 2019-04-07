@@ -1,0 +1,37 @@
+---
+title: satRdays Newcastle
+author: Helen Graham
+date: '2019-04-07'
+slug: satrdayncl
+categories:
+  - R
+tags:
+  - event
+image: "img/satrday.jpg"
+---
+
+### What even is a SatRday?
+
+I had seen mentions of satRdays elsewhere on twitter, but when I saw there was going to be one in Newcastle I still wasn't really sure what to expect. But basically it's a typical R/data science type meetup, except instead of an hour or two after work it's a whole day, on a Saturday. People from different sectors, different disciplines and areas of expertise, sharing something they've done or think is really cool/important in R. 
+
+Maybe there are some local variations, but satRdays Newcastle was lots of short talks (20-45 mins, with a few lightning talks), with lots of ground covered over the course of the day. Like every R related event I've ever been to, it was super friendly and the atmosphere was very jolly and inclusive. The gender split wasn't quite 50-50 but there were loads of R-Ladies there.
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Awesome group of <a href="https://twitter.com/hashtag/rladies?src=hash&amp;ref_src=twsrc%5Etfw">#rladies</a> here at <a href="https://twitter.com/hashtag/satrdayNCL?src=hash&amp;ref_src=twsrc%5Etfw">#satrdayNCL</a>! <a href="https://t.co/smkS2twryb">pic.twitter.com/smkS2twryb</a></p>&mdash; Steph Locke (@TheStephLocke) <a href="https://twitter.com/TheStephLocke/status/1114501272764395520?ref_src=twsrc%5Etfw">April 6, 2019</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<br>
+For the tiniest R-lady and her mum, there was even a separate room for breastfeeding, with a live stream of the lecture theatre!
+
+### Communicating data science
+
+I learned things to a greater or lesser extent from every talk, but I'm not going to go through them all chronologically because that's not the most engaging approach and someone else will probably have done a post like that anyway. Instead I'm going to talk about the way that all the talks taught me something about an issue I'm particularly interested in at the moment: communicating data science.
+
+Data science is a relatively new thing in government, and I generally feel like not many people understand what it is or what data scientists are capable of. To be fair my grasp of this is still developing, and it can be difficult when people are skeptical about what you are even *for* and you're not even sure yourself what your role is or what value you can add. Part of addressing this is upping both the quality and quantity of showing and explaining what we do. The first talk of the day by [Noa Tamir](https://www.twitter.com/noatamir) was therefore very timely, focusing as it did on ways to use generic and well-understood ideas, and entertaining examples, as a way of communicating what you do. I'd never thought about using *Who Wants To Be A Millionaire* to explain how random forests work (it's all to do with the power of asking the audience), but thinking outside the box to come up with interesting hooks for your explanations seems a good way to engage people who don't know or care much about machine learning.
+
+Even more timely was a whole talk by [Dean Allsopp](https://www.twitter.com/daplantagenet) on how to visualise the importance of different features in your machine learning model. This was literally something I had been grappling with last week, because I know it is a valid question that people will ask, and is more interesting to them than 'look at this ROC curve', but wasn't quite sure how to go about it. Turns out there are a load of useful packages, like `vip`, `iml`, and `randomForestExplainer` which can help, and I will be taking them all for a spin next week. I'll also be giving `tidymodels` a go (as demo'd by Jelena Ilic in her talk), not just because it looks labour saving, but also because the code you leave behind is potentially so much cleaner and easier for someone else to pick up or understand what you did. Communicating with your successors/other interested users/future you is also an important kind of communication.
+
+You can't communicate your results if they're stuck on your laptop, and a number of talks focused on ways to get your models out there (Shiny, APIs, ML server). I'll admit these were the talks that I understood the least of - my understanding of data architecture is shockingly low, even for a data scientist - but I was happy to be pointed towards packages and services that might help, if I can do a bit of reading up on them. My aim is not to be able to build these things myself, but at least understand what is out there well enough to write a spec for something that a colleague or external contractor can then build. In other words, communicating my needs as a data scientist, to the people that build the stuff.
+
+### Swapping my Saturday for a satRday
+
+I don't tend to do much work at weekends, because I find it just makes me less productive the following week. However I think for something like a satRday it's worth sacrificing a bit of my weekend, especially when the things I've learned are going to have such a direct impact on my work. It's also energising to check in with the R community from time to time, and feed off the sky high levels of enthusiasm and positivity and general good vibes. Until next time then, satRdays Newcastle...

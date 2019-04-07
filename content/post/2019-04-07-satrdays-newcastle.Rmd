@@ -12,7 +12,7 @@ image: "img/satrday.jpg"
 
 ### What even is a SatRday?
 
-I had seen mentions of satRdays elsewhere on twitter, but when I saw there was going to be one in Newcastle I still wasn't really sure what to expect. But basically it's a typical R/data science type meetup, except instead of an hour or two after work it's a whole day, on a Saturday. People from different sectors, different disciplines and areas of expertise, sharing something they've done or think is really cool/important in R. 
+I had seen mentions of satRdays elsewhere on twitter, but when I saw there was going to be one in Newcastle I still wasn't really sure what to expect. Turns out it's a fairly typical R/data science type meetup, except instead of an hour or two after work it's a whole day, on a Saturday. People from different sectors, different disciplines and areas of expertise, sharing something they've done or think is really cool/important in R. 
 
 Maybe there are some local variations, but satRdays Newcastle was lots of short talks (20-45 mins, with a few lightning talks), with lots of ground covered over the course of the day. Like every R related event I've ever been to, it was super friendly and the atmosphere was very jolly and inclusive. The gender split wasn't quite 50-50 but there were loads of R-Ladies there.
 
@@ -20,11 +20,11 @@ Maybe there are some local variations, but satRdays Newcastle was lots of short 
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 <br>
-For the tiniest R-lady and her mum, there was even a separate room for breastfeeding, with a live stream of the lecture theatre!
+For the tiniest R-lady and her mum, there was even a separate nursing room, with a live stream of the lecture theatre!
 
 ### Communicating data science
 
-I learned things to a greater or lesser extent from every talk, but I'm not going to go through them all chronologically because that's not the most engaging approach and someone else will probably have done a post like that anyway. Instead I'm going to talk about the way that all the talks taught me something about an issue I'm particularly interested in at the moment: communicating data science.
+I learned things to a greater or lesser extent from every talk, but I'm not going to go through them all chronologically because that's not the most engaging approach and someone else will probably have done a post like that anyway. Instead I'm going to write about how the talks taught me something about an issue I'm particularly interested in at the moment: communicating data science.
 
 Data science is a relatively new thing in government, and I generally feel like not many people understand what it is or what data scientists are capable of. To be fair my grasp of this is still developing, and it can be difficult when people are skeptical about what you are even *for* and you're not even sure yourself what your role is or what value you can add. Part of addressing this is upping both the quality and quantity of showing and explaining what we do. The first talk of the day by [Noa Tamir](https://www.twitter.com/noatamir) was therefore very timely, focusing as it did on ways to use generic and well-understood ideas, and entertaining examples, as a way of communicating what you do. I'd never thought about using *Who Wants To Be A Millionaire* to explain how random forests work (it's all to do with the power of asking the audience), but thinking outside the box to come up with interesting hooks for your explanations seems a good way to engage people who don't know or care much about machine learning.
 

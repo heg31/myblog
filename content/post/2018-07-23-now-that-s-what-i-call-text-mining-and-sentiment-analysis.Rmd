@@ -67,7 +67,7 @@ nowalbums <- lapply(nows, get_tracks)
 Now for the lyrics, which come from the [genius.com](https://www.genius.com) website. It has an API for extracting them, but fortunately there is an R package for quick n easy scraping so I can get away with still not really understanding what APIs are or how to use them. The `geniusR` package is based on generating the lyrics URL from the artist and song title, which I conveniently have thanks to the previous scraping exercise. It mostly works, but not always. Some quirks are relatively easy to deal with - removing 'featured' artists or punctuation from song titles improves things considerably. Accented letters can be changed to non-accented ones, although it's harder to make a rule to deal with punctuation within a name, like P!nk. The code here generally fails to match about five songs on each album, so in the absence of spending any further time on data processing, the final dataset will be missing a few things, including sadly all of P!nk's ouvre.
 
 ```{r eval=FALSE}
-library(geniusR)
+library(geniusr)
 
 # Function that extracts lyrics for a given track number on a given NOW album number
 

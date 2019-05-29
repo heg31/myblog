@@ -19,7 +19,7 @@ R has really come on leaps and bounds since I tried it as a grad student about 1
 
 I like to try things out on new data as I learn, so where better to flex my tidyverse muscles than on some data on homebrewing, a subject close to my heart. I like to brew all kinds of things, from the pale and hoppy to the strong, dark and interesting. But what is everyone else brewing? The [Brewer's Friend](https://www.kaggle.com/jtrofe/beer-recipes/data) dataset [^1] has the answers. It contains details of over 70,000 homebrew recipes shared by people who use the site. I use Brewer's Friend myself - I don't actually share my recipes so none of mine are in this dataset, but their [recipe calculator](https://www.brewersfriend.com/homebrew/recipe/calculator) is a useful tool. Plus the name always reminds me of *The Inbetweeners*.
 
-![](img/friend.jpg){width=350px}
+![](/img/friend.jpg){width=350px}
 
 
 <br>

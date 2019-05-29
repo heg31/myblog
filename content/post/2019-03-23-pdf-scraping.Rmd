@@ -173,7 +173,7 @@ kable(mistable, align = "lcccc",
 That's the table! You can admire it, or use the data to make a picture 
 (after coercing it into a tidy format first). 
 
-```{r }
+```{r finalpic}
 mistable %>% 
   filter(Commodity != "Tobacco" & Commodity != "Motoring") %>% 
   gather(famtype, amount, -Commodity) %>% 

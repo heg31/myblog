@@ -8,6 +8,7 @@ disqusShortname = ""
 googleAnalytics = ""
 # Enable emojis
 enableEmoji = true
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
 [params]
   # Style options: default (pink), blue, green, pink, red, sea, violet

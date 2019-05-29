@@ -1,0 +1,180 @@
+---
+title: How are you brewing?
+author: Helen Graham
+date: '2018-07-03'
+slug: how-are-you-brewing
+categories:
+  - R
+tags:
+  - tidyverse
+  - ggplot2
+image: "img/beer.jpg"
+---
+
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<p>I’ve been doing some of <a href="https://www.datacamp.com/courses/tech:r">DataCamp’s</a> excellent R courses over the last few weeks. I’d been kind of using R for a while, learning via online tutorials and a lot of flailing around. Going back to basics and learning things properly has resulted in substantially less flailing and general frustration. Result!</p>
+<p>R has really come on leaps and bounds since I tried it as a grad student about 10 years ago and swore never again. I’m still getting used to the tidyverse way of doing things after a decade of Stata, but I’m impressed with how much you can do with so little code, and how easy plotting things is with <code>ggplot2</code>.</p>
+<div id="brewing-up-a-storm" class="section level3">
+<h3>Brewing up a storm</h3>
+<p>I like to try things out on new data as I learn, so where better to flex my tidyverse muscles than on some data on homebrewing, a subject close to my heart. I like to brew all kinds of things, from the pale and hoppy to the strong, dark and interesting. But what is everyone else brewing? The <a href="https://www.kaggle.com/jtrofe/beer-recipes/data">Brewer’s Friend</a> dataset <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> has the answers. It contains details of over 70,000 homebrew recipes shared by people who use the site. I use Brewer’s Friend myself - I don’t actually share my recipes so none of mine are in this dataset, but their <a href="https://www.brewersfriend.com/homebrew/recipe/calculator">recipe calculator</a> is a useful tool. Plus the name always reminds me of <em>The Inbetweeners</em>.</p>
+<p><img src="img/friend.jpg" width="350" /></p>
+<p><br></p>
+</div>
+<div id="inspecting-the-data" class="section level3">
+<h3>Inspecting the data</h3>
+<p>Summon… the tidyverse! And a couple other things.</p>
+<pre class="r"><code>library(tidyverse)
+library(dplyr)
+library(knitr)
+library(kableExtra)</code></pre>
+<p>The dataset comes from kaggle in CSV format, so let’s import it and see what we’ve got.</p>
+<pre class="r"><code>beer &lt;- read.csv(beerfile)
+names(beer)</code></pre>
+<pre><code>##  [1] &quot;BeerID&quot;        &quot;Name&quot;          &quot;URL&quot;           &quot;Style&quot;        
+##  [5] &quot;StyleID&quot;       &quot;Size.L.&quot;       &quot;OG&quot;            &quot;FG&quot;           
+##  [9] &quot;ABV&quot;           &quot;IBU&quot;           &quot;Color&quot;         &quot;BoilSize&quot;     
+## [13] &quot;BoilTime&quot;      &quot;BoilGravity&quot;   &quot;Efficiency&quot;    &quot;MashThickness&quot;
+## [17] &quot;SugarScale&quot;    &quot;BrewMethod&quot;    &quot;PitchRate&quot;     &quot;PrimaryTemp&quot;  
+## [21] &quot;PrimingMethod&quot; &quot;PrimingAmount&quot; &quot;UserId&quot;</code></pre>
+<p>There are more variables than I want. I am restricting this analysis to a handful: style, batch size, ABV (boozy-ness), IBU (bitterness), colour and brewing method. I also want to turn the colour, currently on a continuous scale, into a factor variable with four categories based on typical cutoff points. Luckily the data is already ‘tidy’, so there’s just a little janitorial work to be done, filtering out cases with odd values on the numeric variables (unfeasibly large batch sizes, ABV, etc.).</p>
+<pre class="r"><code>beer2 &lt;- beer %&gt;%
+  mutate(BatchSize = `Size.L.`) %&gt;%
+  select(Style, BatchSize, ABV, IBU, Color, BrewMethod) %&gt;%
+  mutate_at(c(&quot;Style&quot;, &quot;BrewMethod&quot;), funs(factor(.))) %&gt;%
+  mutate(ColorCat = cut(Color, breaks = c(0,7.5,14,25,186), 
+                        labels = c(&quot;Pale&quot;, &quot;Amber&quot;, &quot;Brown&quot;, &quot;Dark&quot;))) %&gt;% 
+  filter(BatchSize &lt;= 100) %&gt;%
+  filter(Color &gt;= 2 &amp; Color &lt; 70) %&gt;%
+  filter(ABV &lt;= 15) %&gt;%
+  filter(IBU &lt;= 150)</code></pre>
+<pre><code>## Warning: funs() is soft deprecated as of dplyr 0.8.0
+## please use list() instead
+## 
+##   # Before:
+##   funs(name = f(.))
+## 
+##   # After: 
+##   list(name = ~ f(.))
+## This warning is displayed once per session.</code></pre>
+<p>Let’s have a look at the variables in my new smaller dataset. Here’s a nifty way to get histograms of all your numerical variables at once, using <code>gather</code>:</p>
+<pre class="r"><code>beer2 %&gt;%
+  keep(is.numeric) %&gt;%
+  gather() %&gt;%
+  ggplot(aes(value)) + facet_wrap(~ key, scales = &quot;free&quot;) + geom_histogram()</code></pre>
+<p><img src="/post/2018-06-29-how-are-you-brewing_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>For the factor variables, basic frequencies will suffice for now:</p>
+<pre class="r"><code>beerfactor &lt;- beer2 %&gt;%
+ keep(is.factor)
+
+summary(beerfactor)</code></pre>
+<pre><code>##                   Style              BrewMethod     ColorCat    
+##  American IPA        :11142   All Grain   :46558   Pale :30836  
+##  American Pale Ale   : 7317   BIAB        :11784   Amber:17608  
+##  Saison              : 2536   extract     : 8287   Brown:10225  
+##  American Light Lager: 2010   Partial Mash: 3415   Dark :11375  
+##  American Amber Ale  : 1972                                     
+##  Blonde Ale          : 1662                                     
+##  (Other)             :43405</code></pre>
+<p>The recipes are mostly all grain, and the pale styles dominate. There’s a lot of styles in that ‘other’ category, and indeed there are a lot of different styles in the dataset…</p>
+<pre class="r"><code>beer2 %&gt;% summarise(nstyle = n_distinct(Style))</code></pre>
+<pre><code>##   nstyle
+## 1    175</code></pre>
+<p>…175 to be exact. Too many to make a sensible plot or table, so we’re probably only interested in the top n, say the top 20.</p>
+<pre class="r"><code>beer2 %&gt;% count(Style) %&gt;% top_n(20) %&gt;% ggplot(aes(x = fct_reorder(Style,n), y = n)) + geom_col() + coord_flip() + xlab(&quot;Style&quot;) + ylab(&quot;Number in dataset&quot;)</code></pre>
+<p><img src="/post/2018-06-29-how-are-you-brewing_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>The top 20 is quite diverse, but dominated by pale ales. The pervasiveness of the pale suggests that most homebrewing is not about brewing anything crazy or innovative, but rather having a ready supply of something easy drinking. I certainly find that, despite having plenty of interesting beers in the cupboard, 80% of the time I have ‘nothing to drink’ because what actually I want is something cold, pale and refreshing.</p>
+</div>
+<div id="characteristics-of-the-beers" class="section level3">
+<h3>Characteristics of the beers</h3>
+<p>What is the average AVG, IBU and batch size? This is a question that can be answered relatively quickly, although I still feel that producing summary stats like this could be a <em>little</em> easier in R. Maybe there’s a package out there I’m not aware of (or I need to write one!).</p>
+<pre class="r"><code>means &lt;- beer2 %&gt;% select(ABV, IBU, BatchSize) %&gt;% summarise_all(funs(mean = mean, median = median)) %&gt;% gather(stat,val) %&gt;% separate(stat,into = c(&quot;var&quot;,&quot;stat&quot;), sep = &quot;_&quot;) %&gt;% spread(stat,val)
+kable(means, digits = 1, col.names = c(&quot;Feature&quot;,&quot;Mean&quot;,&quot;Median&quot;)) %&gt;% kable_styling(full_width = FALSE)</code></pre>
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Feature
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+Median
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+ABV
+</td>
+<td style="text-align:right;">
+6.1
+</td>
+<td style="text-align:right;">
+5.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BatchSize
+</td>
+<td style="text-align:right;">
+23.2
+</td>
+<td style="text-align:right;">
+20.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IBU
+</td>
+<td style="text-align:right;">
+41.7
+</td>
+<td style="text-align:right;">
+35.6
+</td>
+</tr>
+</tbody>
+</table>
+<p>The average ABV is in line with typical US IPAs, a bit stronger than a ‘session’ beer but not monster strength. The average brewer is also not a massive hop head, with average IBU on the gentle side of the typical IPA range. The average batch size is the typical 5 gallon batch, and the histogram above suggested there’s not a great deal of deviation from this. I actually tend to brew in smaller quantities because I’m quite an experimental brewer and I don’t want 40 bottles of everything I make, but it’s much less cost effective.</p>
+</div>
+<div id="breaking-things-down-by-colour" class="section level3">
+<h3>Breaking things down by colour</h3>
+<p>Are there differences in typical ABV and IBU depending on the colour of the beer? Actually it turns out the averages are quite similar.</p>
+<pre class="r"><code>beershade &lt;- c(&quot;lightgoldenrod1&quot;, &quot;orange1&quot;, &quot;tan4&quot;, &quot;black&quot;)
+
+colorstat &lt;- beer2 %&gt;% 
+  group_by(ColorCat) %&gt;% 
+  summarise(IBU = mean(IBU), ABV = mean(ABV))
+
+beer2 %&gt;%
+  filter(IBU &gt; 0) %&gt;%
+  ggplot(aes(ABV, IBU, col = ColorCat)) + geom_point(size = 0.5, alpha = 0.2) +
+  geom_point(data = colorstat, size = 2, shape = 16, color = &quot;red&quot;) +
+  scale_colour_manual(values = beershade) +
+  facet_wrap(~ ColorCat)</code></pre>
+<p><img src="/post/2018-06-29-how-are-you-brewing_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>The red dots represent the average ABU/IBV values within each type. Dark beers are a bit stronger on average, while amber beers are the bitterest, although there is not much variation in averages between the styles. However, the darker the beer, the more likely we are to see a few brave souls venturing into the top-right (high ABV/high IBU) quadrant. Bet they got some kudos for those at homebrew club.</p>
+<p>How about an overlaid frequency polygon to look at these ABV patterns? Just because.</p>
+<pre class="r"><code>ggplot(beer2, aes(ABV, col = ColorCat)) +
+  geom_freqpoly(aes(y = ..density..)) +
+  scale_colour_manual(values = beershade) </code></pre>
+<p><img src="/post/2018-06-29-how-are-you-brewing_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>The distribution of ABV is similar across all four types, but differences are apparent - for example the much sharper peak at just over 5% for pale beers. The ‘skinnier’ density plot and scatter seen for pale beers suggests less diversity in this style despite its popularity.</p>
+<p>I was surprised to see the average IBU on dark ales being quite so high. Are people brewing very bitter stouts, or does this reflect a growing popularity of black IPAs? Let’s look at the 10 most popular styles among the dark beers, and their average IBU.</p>
+<pre class="r"><code>beer2 %&gt;% filter(ColorCat == &quot;Dark&quot;) %&gt;% group_by(Style) %&gt;% summarise(meanibu = mean(IBU), number = n()) %&gt;% arrange(desc(number)) %&gt;% top_n(20) %&gt;% ggplot(aes(x = fct_reorder(Style, number), y = meanibu, label = number)) + geom_col() + coord_flip() + geom_text(colour = &quot;white&quot;, hjust = 1, size = 3) + xlab(&quot;Style&quot;) + ylab(&quot;Mean IBU&quot;)</code></pre>
+<p><img src="/post/2018-06-29-how-are-you-brewing_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>The length of the bars here represents IBU but they are arranged by popularity of style (the white numbers at the end of the bars show how many of each style is in the dataset). You can see that the more bitter black IPAs are indeed a popular choice, but so are imperial stouts, which people are choosing to bitter as heavily as IPAs. I’d love to compare late addition and dry hopping between the styles, but unfortunately that is not part of the dataset.</p>
+<p>I wonder if you can segment brewers into types. The easy going pale ale fans vs. the nerds making ridiculous imperial stouts. CAMRA vs. craft. Beardy guys wearing sandals vs. beardy guys wearing Converse. This is something that I hope to look at in a follow up post, by linking the beer data to the user data, although any inferences to footwear and facial hair will be purely speculative.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>The dataset is published on Kaggle and released under a CC0: Public Domain licence.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+</ol>
+</div>

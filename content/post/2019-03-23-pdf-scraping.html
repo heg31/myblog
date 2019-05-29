@@ -35,7 +35,7 @@ minimum standard in the UK today. Some of the headline tables are in a more easi
 scrapable html page, but the detail is buried in a pdf. And maybe you want that for some
 reason? For example, Table 3 in the report gives the amounts that different family types
 are judged to need for spending on different things.</p>
-<p><img src="/post/2019-03-23-pdf-scraping_files/mistable.jpg" /></p>
+<p><img src="/img/mistable.jpg" /></p>
 <p><br>
 This table is on page 33 of the pdf, so I start by grabbing everything on that page. The
 <code>pdf_data()</code> function produces a list with one item per page, so I select the 33rd.</p>
@@ -153,7 +153,7 @@ Look for the leftmost word in each:</p>
 ## 6     5      9   467   256 TRUE  +</code></pre>
 <p>Now we have the numbers the table can be visualised thus (dodgy paint drawings are
 not an essential part of this process):</p>
-<p><img src="/post/2019-03-23-pdf-scraping_files/tablelocations.png" /></p>
+<p><img src="/img/tablelocations.png" /></p>
 <p><br>
 From here it’s a relatively straightforward merging exercise. I
 start by restricting the data I’m working with to within the dimensions of interest, from

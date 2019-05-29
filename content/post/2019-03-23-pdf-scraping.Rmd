@@ -35,7 +35,7 @@ scrapable html page, but the detail is buried in a pdf. And maybe you want that 
 reason? For example, Table 3 in the report gives the amounts that different family types 
 are judged to need for spending on different things.
 
-![](/post/2019-03-23-pdf-scraping_files/mistable.jpg)
+![](/img/mistable.jpg)
 
 
 <br>
@@ -113,7 +113,7 @@ pdfdata %>%
 Now we have the numbers the table can be visualised thus (dodgy paint drawings are 
 not an essential part of this process):
 
-![](/post/2019-03-23-pdf-scraping_files/tablelocations.png)
+![](/img/tablelocations.png)
 
 <br>
 From here it's a relatively straightforward merging exercise. I 

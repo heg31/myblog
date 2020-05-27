@@ -8,6 +8,8 @@ categories:
 tags:
   - event
 image: "img/satrday.jpg"
+description: "tldr; a Saturday well spent"
+
 ---
 
 ### What even is a SatRday?

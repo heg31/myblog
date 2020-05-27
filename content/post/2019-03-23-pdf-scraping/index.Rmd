@@ -9,6 +9,7 @@ tags:
   - tidyverse
   - pdftools
 image: "img/jail-kittens.jpg"
+description: "What to do when that data you want is trapped in a pdf"
 ---
 
 I've had the unfortunate task recently of having to liberate some 
@@ -35,7 +36,7 @@ scrapable html page, but the detail is buried in a pdf. And maybe you want that 
 reason? For example, Table 3 in the report gives the amounts that different family types 
 are judged to need for spending on different things.
 
-![](/img/mistable.jpg)
+![](mistable.jpg)
 
 
 <br>
@@ -48,7 +49,7 @@ library(pdftools)
 library(knitr)
 library(kableExtra)
 
-pdfdata <- pdf_data("https://www.jrf.org.uk/file/37389/download?token=XeWAW_2J&filetype=full-report") %>% 
+pdfdata <- pdf_data("https://www.jrf.org.uk/file/37389/download?token=pg1Xs2Qb&filetype=full-report") %>% 
   .[[33]]
 head(pdfdata)
 ```
@@ -113,7 +114,7 @@ pdfdata %>%
 Now we have the numbers the table can be visualised thus (dodgy paint drawings are 
 not an essential part of this process):
 
-![](/img/tablelocations.png)
+![](tablelocations.png)
 
 <br>
 From here it's a relatively straightforward merging exercise. I 

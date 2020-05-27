@@ -9,6 +9,7 @@ categories:
   - blogdown
 tags: []
 image: "img/baby.jpg"
+description: "It's my very own website!"
 ---
 
 I made a personal website/blog, and so can you!

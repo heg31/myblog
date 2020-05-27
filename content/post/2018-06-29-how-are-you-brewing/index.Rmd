@@ -2,7 +2,8 @@
 title: "How are you brewing?"
 author: "Helen Graham"
 date: '2018-07-03'
-image: img/beer.jpg
+image: "img/beer.jpg"
+description: "What are people brewing? Beard and sandals not required."
 slug: how-are-you-brewing
 tags:
 - tidyverse
@@ -32,7 +33,6 @@ I like to try things out on new data as I learn, so where better to flex my tidy
 Summon... the tidyverse! And a couple other things.
 ```{r message = FALSE}
 library(tidyverse)
-library(dplyr)
 library(knitr)
 library(kableExtra)
 ```
@@ -46,7 +46,10 @@ beerfile <- "recipeData.csv"
 
 
 ```{r}
-beer <- read.csv(beerfile)
+beer <- read_csv(beerfile) %>% 
+  #weird stuff you need to do to make the encoding work - there must be a more elegant way??
+  mutate(Style = iconv(Style, "latin1", "utf-8")) %>% 
+  mutate(Style = iconv(Style, "utf-8", "latin1"))
 names(beer)
 ```
 
@@ -54,7 +57,7 @@ There are more variables than I want. I am restricting this analysis to a handfu
 
 ```{r}
 beer2 <- beer %>%
-  mutate(BatchSize = `Size.L.`) %>%
+  mutate(BatchSize = `Size(L)`) %>%
   select(Style, BatchSize, ABV, IBU, Color, BrewMethod) %>%
   mutate_at(c("Style", "BrewMethod"), funs(factor(.))) %>%
   mutate(ColorCat = cut(Color, breaks = c(0,7.5,14,25,186), 

@@ -10,6 +10,7 @@ tags:
   - rvest
   - geniusR
 image: "img/walkman.jpg"
+description: "Has popular music got sadder?"
 ---
 
 Do you remember the first album you bought? Was it something achingly hip and trendy? Mine wasn’t. It was *Now That’s What I Call Music! 33*, a compilation of the most mainstream music money can buy. I could make the excuse that I was only 11 at the time, but my tastes have remained resolutely uncool. It was 1996 and the charts were full of Britpop and guitar bands, so *Now! 33* features a healthy dose of the likes of Blur, Pulp, Oasis and Radiohead alongside its Boyzone, East-17, and a bizarre, catchy one hit wonder called [*I Wanna Be A Hippy*](https://www.youtube.com/watch?v=4wSr7h_pjxs).
@@ -226,12 +227,16 @@ Some distinguishing features of each decade seem to be:
 Another thing you can do is look at the emotional tenor of each album or decade. One way to do this is using the AFINN sentiment lexicon, which assigns a sentiment score to about 2,500 common sentiment words; a positive score of up to 5, or a negative score down to -5. If we calculate the average score of all the sentiment words in each album, we get something that looks like this:
 
 ```{r message=FALSE, warning=FALSE}
+
+# need to download manually
+afinn <- readRDS("afinn.rds")
+
 lyricsdata %>% 
   unnest_tokens(word, lyrics) %>% 
   mutate(word = str_extract(word, "[a-z']+")) %>% 
-  inner_join(get_sentiments("afinn")) %>%
+  inner_join(afinn) %>%
   group_by(date) %>% 
-  summarise(meansent = mean(score)) %>% 
+  summarise(meansent = mean(value)) %>% 
   ggplot(aes(x = date, y = meansent)) +
   geom_point(alpha = 0.5) +
   geom_smooth(se = FALSE) +
@@ -248,9 +253,12 @@ The average sentiment score peaked in the early 1990s and has been falling since
 You can also use the NRC sentiment lexicon to explore the presence of a range of emotions. What proportion of sentiment words in each decade's lyrics fall into each category?
 
 ```{r warning=FALSE, message=FALSE}
+
+nrc <- readRDS("nrc.rds")
+
 lyricsdata %>% 
   unnest_tokens(word, lyrics) %>% 
-  inner_join(get_sentiments("nrc")) %>% 
+  inner_join(nrc) %>% 
   group_by(decade) %>% 
   count(sentiment) %>% 
   mutate(prop = n / sum(n)) %>% 

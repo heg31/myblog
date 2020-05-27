@@ -24,5 +24,5 @@ Singing, playing the violin, hiking, cooking and homebrewing.
 
 
 
-[1]: /img/helen.jpg
+[1]: helen.jpg
 
